@@ -41,7 +41,19 @@ Ext.define('Your.grid',{
 					var rec = grid.getStore().getAt(rowIndex);
                     alert("Report " + rec.get('firstname'));
                 }                
-            }]
+            },
+			{
+				text: 'Extras',
+				buttonConfig: { padding: 10 },
+				menu: [
+					{ text: 'Item 1',
+					  handler: function(grid, rowIndex, colIndex) {
+						var rec = grid.getStore().getAt(rowIndex);
+                    	alert("Item 1 for " + rec.get('firstname'));
+					  } 
+					},
+					{ text: 'Item 2' }
+			}]
         }
 
     ]
