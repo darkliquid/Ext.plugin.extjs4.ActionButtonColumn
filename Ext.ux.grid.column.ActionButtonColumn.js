@@ -136,14 +136,27 @@ Ext.define('Ext.ux.grid.column.ActionButtonColumn', {
 				var cls = Ext.baseCSSPrefix + 'action-col-button ' + Ext.baseCSSPrefix + 'action-col-button-' + String(i)+(item.cls ? ' '+item.cls : '');
 				var iconCls = item.iconIndex ? rec.data[item.iconIndex] : (item.iconCls ? item.iconCls : '');
 				var fun = Ext.emptyFn;
+				var menu = undefined;
 				var context = me;
+				// this seems a lot more complicated than you'd expect by
+				// virtue of javascripts interesting departure from it's
+				// usual pass-by-value approach when accessing passed object's
+				// attributes.
 				if (item.menu) {
-					Ext.each(item.menu, function(menuitem) {
-						if(menuitem.handler) {
-							menuitem.handler = Ext.bind(menuitem.handler, context, [view, rowIndex, colIndex]);
-						}
+					menu = [];
+					Ext.each(item.menu, function(menuitem, index) {
+						menu.push({});
+						Ext.Object.each(menuitem, function(key, value) {
+							if(key === 'handler') {
+								menu[index].handler = Ext.bind(value, context, [view, rowIndex, colIndex]);
+							} else {
+								menu[index][key] = value;
+							}
+						});
 					});
 				}
+				console.log(rowIndex);
+				console.log(menu);
 				if (item.handler) {
 					if (item.context) {
 						context = item.context;
@@ -173,7 +186,7 @@ Ext.define('Ext.ux.grid.column.ActionButtonColumn', {
 					hide = rec.data[item.hideIndex];
 				}
 
-				Ext.Function.defer(me.createGridButton, 100, me, [item.text, nid, rec, cls, fun, hide, iconCls, item.menu, item.buttonConfig || {}]);
+				Ext.Function.defer(me.createGridButton, 100, me, [item.text, nid, rec, cls, fun, hide, iconCls, menu, item.buttonConfig || {}]);
 
 				v += '<div id="' + nid + '">&#160;</div>';
 			}
