@@ -155,8 +155,6 @@ Ext.define('Ext.ux.grid.column.ActionButtonColumn', {
 						});
 					});
 				}
-				console.log(rowIndex);
-				console.log(menu);
 				if (item.handler) {
 					if (item.context) {
 						context = item.context;
